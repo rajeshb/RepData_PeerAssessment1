@@ -31,6 +31,9 @@ activityDataCompleteCases <- activityData[complete.cases(activityData), ]
 
 # Aggregate steps per day
 activityDataStepsPerDay <- aggregate(activityDataCompleteCases$steps, by = list(Date=activityDataCompleteCases$date), FUN="sum")
+
+# Aggregate steps per 5 minute interval across all days
+activityDataStepsPerInterval <- aggregate(activityDataCompleteCases$steps, by = list(interval=activityDataCompleteCases$interval), FUN="mean")
 ```
 
 ## What is mean total number of steps taken per day?
@@ -49,7 +52,15 @@ medianStepsPerDay <- median(activityDataStepsPerDay$x)
 
 ## What is the average daily activity pattern?
 
+```{r, echo=TRUE}
 
+plot(activityDataStepsPerInterval$interval, activityDataStepsPerInterval$x, type="l", xlab="5-min time interval", ylab="avg. number of steps", main="average daily activity")
+
+# Maximum average number of steps in an interval across dates
+maxStepsInInterval <- activityDataStepsPerInterval[which.max(activityDataStepsPerInterval$x),]$interval
+
+```
+5-minute interval, on average across all the days in the dataset, contains the maximum number of steps : `r maxStepsInInterval`
 
 ## Imputing missing values
         
