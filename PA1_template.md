@@ -1,13 +1,9 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
-```{r, echo=TRUE}
+
+```r
 dataFile <- "activity.csv"
 zipFile <- "activity.zip"
 
@@ -35,24 +31,29 @@ activityDataStepsPerDay <- aggregate(activityDataCompleteCases$steps, by = list(
 
 ## What is mean total number of steps taken per day?
 
-```{r,echo=TRUE}
-hist(activityDataStepsPerDay$x, col="red", xlab="Steps/day", main="Steps per day range vs Frequency")
 
+```r
+hist(activityDataStepsPerDay$x, col="red", xlab="Steps/day", main="Steps per day range vs Frequency")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+
+```r
 meanStepsPerDay <- mean(activityDataStepsPerDay$x)
 medianStepsPerDay <- median(activityDataStepsPerDay$x)
 ```
 
 **Steps per day**  
 
-- Mean : `r meanStepsPerDay` 
-- Median : `r medianStepsPerDay`
+- Mean : 1.0766189\times 10^{4} 
+- Median : 10765
 
 ## What is the average daily activity pattern?
 
 
 
 ## Imputing missing values
-        
+
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
