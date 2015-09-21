@@ -4,6 +4,7 @@
 ## Loading and preprocessing the data
 
 ```r
+library(lattice)
 dataFile <- "activity.csv"
 zipFile <- "activity.zip"
 
@@ -105,3 +106,17 @@ Total number of missing rows : 2304
 - Median : 1.0766189\times 10^{4}
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+
+```r
+activityDataFixed$day <- ifelse(weekdays(activityDataFixed$date)== "Sunday" | weekdays(activityDataFixed$date)== "Saturday","Weekend","Weekday")
+
+activityDataFixed$day <- as.factor(activityDataFixed$day)
+
+# Aggregate steps per 5 minute interval across weekdays/weekends
+activityDataFixedStepsPerInterval <- aggregate(activityDataFixed$steps, by = list(day=activityDataFixed$day,interval=activityDataFixed$interval), FUN="mean")
+
+xyplot(x ~ interval | day, data=activityDataFixedStepsPerInterval, type="l", layout=c(1,2), ylab="Number of steps", xlab="Interval")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
