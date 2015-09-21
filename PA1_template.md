@@ -67,7 +67,41 @@ maxStepsInInterval <- activityDataStepsPerInterval[which.max(activityDataStepsPe
 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps : 835
 
 ## Imputing missing values
-        
 
+
+```r
+totalMissingRows <- nrow(activityData) - nrow(activityDataCompleteCases)
+
+# Update missing data with avarage steps for that particular time interval
+missingData <- activityData[is.na(activityData),]
+
+missingData <- merge(missingData, activityDataStepsPerInterval, by=c("interval"))
+missingData <- missingData[,c('x', 'date', 'interval')]
+
+colnames(missingData) <- c("steps","date", "interval")
+colnames(activityDataCompleteCases) <- c("steps", "date", "interval")
+
+# Combine/Merge datasets
+activityDataFixed <- rbind(missingData, activityDataCompleteCases)
+
+# Fixed aggregate steps per day
+fixedActivityDataStepsPerDay <- aggregate(activityDataFixed$steps, by = list(Date=activityDataFixed$date), FUN="sum")
+
+# Histogram with fixed data
+hist(fixedActivityDataStepsPerDay$x, col="blue", xlab="Steps/day (fixed data)", main="Steps per day range vs Frequency")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+
+```r
+fixedMeanStepsPerDay <- mean(fixedActivityDataStepsPerDay$x)
+fixedMedianStepsPerDay <- median(fixedActivityDataStepsPerDay$x)
+```
+Total number of missing rows : 2304
+
+**Steps per day**  
+
+- Mean : 1.0766189\times 10^{4} 
+- Median : 1.0766189\times 10^{4}
 
 ## Are there differences in activity patterns between weekdays and weekends?

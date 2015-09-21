@@ -34,6 +34,7 @@ activityDataStepsPerDay <- aggregate(activityDataCompleteCases$steps, by = list(
 
 # Aggregate steps per 5 minute interval across all days
 activityDataStepsPerInterval <- aggregate(activityDataCompleteCases$steps, by = list(interval=activityDataCompleteCases$interval), FUN="mean")
+
 ```
 
 ## What is mean total number of steps taken per day?
@@ -63,7 +64,36 @@ maxStepsInInterval <- activityDataStepsPerInterval[which.max(activityDataStepsPe
 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps : `r maxStepsInInterval`
 
 ## Imputing missing values
-        
 
+```{r, echo=TRUE}
+totalMissingRows <- nrow(activityData) - nrow(activityDataCompleteCases)
+
+# Update missing data with avarage steps for that particular time interval
+missingData <- activityData[is.na(activityData),]
+
+missingData <- merge(missingData, activityDataStepsPerInterval, by=c("interval"))
+missingData <- missingData[,c('x', 'date', 'interval')]
+
+colnames(missingData) <- c("steps","date", "interval")
+colnames(activityDataCompleteCases) <- c("steps", "date", "interval")
+
+# Combine/Merge datasets
+activityDataFixed <- rbind(missingData, activityDataCompleteCases)
+
+# Fixed aggregate steps per day
+fixedActivityDataStepsPerDay <- aggregate(activityDataFixed$steps, by = list(Date=activityDataFixed$date), FUN="sum")
+
+# Histogram with fixed data
+hist(fixedActivityDataStepsPerDay$x, col="blue", xlab="Steps/day (fixed data)", main="Steps per day range vs Frequency")
+
+fixedMeanStepsPerDay <- mean(fixedActivityDataStepsPerDay$x)
+fixedMedianStepsPerDay <- median(fixedActivityDataStepsPerDay$x)
+```
+Total number of missing rows : `r totalMissingRows`
+
+**Steps per day**  
+
+- Mean : `r fixedMeanStepsPerDay` 
+- Median : `r fixedMedianStepsPerDay`
 
 ## Are there differences in activity patterns between weekdays and weekends?
